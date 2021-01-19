@@ -1,3 +1,10 @@
+
+.vscode
+.nodemcutool
+*.lc
+font
+env
+
 # Compiled Lua sources
 luac.out
 
