@@ -4,9 +4,14 @@
 
 购买链接：https://item.taobao.com/item.htm?id=636602441363
 
+Github托管：https://github.com/HelloWorksGroup/FansBoard
+
+Gitee托管：https://gitee.com/xianii/fans-board
+
 ## 总览
+
 `Fans board` 开源粉丝面板是一个用于网络数据实时显示的硬件。
-它能够实时显示粉丝数，播放数等动态变化的信息。
+它可以用来实时显示粉丝数，播放数，天气，股价等动态变化的信息。
 
 ![](assets/view.gif)
 
@@ -30,8 +35,7 @@
 
 #### 安装Java运行时环境
 1. Ubuntu: `sudo apt install openjdk-8-jre`
-2. Windows:
-3. macOS:
+2. Windows: 安装开发包中的`JRE_v8.0.202_windows`
 
 #### 启动软件
 1. Ubuntu: `sudo java -jar ESPlorer.jar`
