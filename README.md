@@ -15,7 +15,7 @@ Gitee托管：https://gitee.com/xianii/fans-board
 
 ![](assets/view.gif)
 
-![](assets/main.jpg)
+![](assets/front.jpg)
 
 ![](assets/side.jpg)
 
