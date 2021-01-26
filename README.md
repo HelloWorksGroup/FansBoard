@@ -149,3 +149,8 @@ Gitee托管：https://gitee.com/xianii/fans-board
 
 - QQ群-1群：`177238886`
 - 井盖群：[https://jgchat.net/i/FXVivStG](https://jgchat.net/i/FXVivStG)
+
+
+## 赞助(Sponsor)
+
+![](assets_readme/paypal.webp)![](assets_readme/alipay.webp)![](assets_readme/afdian.webp)
