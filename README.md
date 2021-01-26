@@ -153,4 +153,4 @@ Gitee托管：https://gitee.com/xianii/fans-board
 
 ## 赞助(Sponsor)
 
-![](assets_readme/paypal.webp)![](assets_readme/alipay.webp)![](assets_readme/afdian.webp)
+![](assets/paypal.webp)![](assets/alipay.webp)![](assets/afdian.webp)
