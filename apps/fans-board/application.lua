@@ -1,6 +1,5 @@
 
 api = "http://api.bilibili.com/x/relation/stat?vmid="
-uid = "895523"
 
 print("app start")
 print("heap3:" .. node.heap())

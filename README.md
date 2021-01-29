@@ -119,11 +119,9 @@ Gitee托管：https://gitee.com/xianii/fans-board
 
 如果模块正常启动，则会在串口输出的最后看到`cannot open init.lua`的字样。否则，请按模块上的`RST`按钮重启。
 
-然后编辑脚本文件，在`wifi.lua`文件中，需要填入你的`wifi`名称和密码。在`application.lua`文件中，修改最前面的`uid=`为你需要监控粉丝数量的B站账号的UID。
+然后编辑脚本文件，在`setting.lua`文件中，需要填入你的`wifi`名称和密码还有你需要监控粉丝数量的账号`uid`。
 
-![](assets/edit1.png)
-
-![](assets/edit2.png)
+![](assets/edit.webp)
 
 你可以使用任意工具来编辑`lua`文件，`windows`自带的记事本也可以。修改后记得保存。
 

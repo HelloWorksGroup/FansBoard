@@ -1,10 +1,17 @@
 
 -- uart.setup(0, 460800, 8, 0, 1, 1 )
-dofile("wifi.lua")
-print("heap1:" .. node.heap())
+-- print("heap1:" .. node.heap())
 display = require("display")
-print("heap2:" .. node.heap())
+-- print("heap2:" .. node.heap())
 display:update("BOOT", -1)
+if file.open("setting.lua") == nil then
+	display:update("NOT SET", -1)
+	tmr.softwd(5)
+	return
+else
+	file.close("setting.lua")
+	dofile("setting.lua")
+end
 
 function startup()
 	if file.open("init.lua") == nil then
