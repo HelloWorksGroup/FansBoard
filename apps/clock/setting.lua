@@ -1,0 +1,2 @@
+SSID = "yourwifi"
+PASSWORD = "meiyoumima"
