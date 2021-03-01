@@ -42,7 +42,7 @@ wifi_got_ip_event = function(T)
 		display:update("GET IP", -1)
 	-- Note: Having an IP address does not mean there is internet access!
 	-- Internet connectivity can be determined with net.dns.resolve().
-		tmr.create():alarm(2000, tmr.ALARM_SINGLE, startup)
+		tmr.create():alarm(1000, tmr.ALARM_SINGLE, startup)
 	end
 end
 
