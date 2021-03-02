@@ -19,6 +19,13 @@ Gitee托管：https://gitee.com/xianii/fans-board
 
 ![](assets/side.jpg)
 
+## 应用
+
+目前此项目中已经包含的应用如下：
+
+- [粉丝面板](apps/fans-board)
+- [经典时钟](apps/clock)
+
 ## 使用说明
 
 ![](assets/assemble.jpg)
