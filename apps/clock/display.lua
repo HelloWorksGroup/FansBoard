@@ -128,9 +128,13 @@ function pixel_map:set_chr_ex(pos, chr, shift)
 	end
 end
 
-local function err_hw_workaround(hex)
-	return bit.band(bit.bor(bit.rshift(hex,1),bit.lshift(hex,7)),0xFF)
+if file.open("workaround001.lua") ~= nil then
+	file.close("workaround001.lua")
+	err_hw_workaround = dofile("workaround001.lua")
+	print("workaround detected")
 end
+
+err_hw_workaround = err_hw_workaround or function(hex) return hex end
 
 function pixel_map:send()
 	for i=1,8 do

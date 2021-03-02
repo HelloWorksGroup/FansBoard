@@ -1,8 +1,11 @@
 
 -- uart.setup(0, 460800, 8, 0, 1, 1 )
--- print("heap1:" .. node.heap())
 display = require("display")
--- print("heap2:" .. node.heap())
+
+-- 避免由于断网重新联网导致的app重入
+-- 以及显示混乱的问题
+app_started = false
+
 display:update("BOOT", -1)
 if file.open("setting.lua") == nil then
 	display:update("NOT SET", -1)
@@ -17,29 +20,30 @@ function startup()
 	if file.open("init.lua") == nil then
 		print("init.lua deleted or renamed")
 	else
-		print("Running")
 		file.close("init.lua")
+		app_started = true
 		dofile("application.lua")
-		print("heap5:" .. node.heap())
 	end
 end
 
 -- Define WiFi station event callbacks
 wifi_connect_event = function(T)
-	display:update("CONNECT", -1)
+	if not app_started then
+		display:update("CONNECT", -1)
+	end
 	print("Connection to AP("..T.SSID..") established!")
 	print("Waiting for IP address...")
 	if disconnect_ct ~= nil then disconnect_ct = nil end
 end
 
 wifi_got_ip_event = function(T)
-	display:update("GET IP", -1)
+	print("Wifi connection is ready! IP address is: "..T.IP)
+	if not app_started then
+		display:update("GET IP", -1)
 	-- Note: Having an IP address does not mean there is internet access!
 	-- Internet connectivity can be determined with net.dns.resolve().
-	print("Wifi connection is ready! IP address is: "..T.IP)
-	print("Startup will resume momentarily, you have 3 seconds to abort.")
-	print("Waiting...")
-	tmr.create():alarm(3000, tmr.ALARM_SINGLE, startup)
+		tmr.create():alarm(1000, tmr.ALARM_SINGLE, startup)
+	end
 end
 
 wifi_disconnect_event = function(T)
@@ -65,15 +69,18 @@ wifi_disconnect_event = function(T)
 	else
 		disconnect_ct = disconnect_ct + 1
 	end
-	if disconnect_ct < total_tries then
-		display:update("RETRY-" .. disconnect_ct, -1)
-		print("Retrying connection...(attempt "..(disconnect_ct+1).." of "..total_tries..")")
+	if not app_started then
+		if disconnect_ct < total_tries then
+			display:update("RETRY-" .. disconnect_ct, -1)
+			print("Retrying connection...(attempt "..(disconnect_ct+1).." of "..total_tries..")")
+		else
+			wifi.sta.disconnect()
+			print("Aborting connection to AP!")
+			disconnect_ct = nil
+			display:update("FAILED", -1)
+			tmr.softwd(5)
+		end
 	else
-		wifi.sta.disconnect()
-		print("Aborting connection to AP!")
-		disconnect_ct = nil
-		display:update("FAILED", -1)
-		tmr.softwd(5)
 	end
 end
 
