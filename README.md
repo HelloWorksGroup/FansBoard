@@ -25,6 +25,7 @@ Gitee托管：https://gitee.com/xianii/fans-board
 
 - [粉丝面板](apps/fans-board)
 - [经典时钟](apps/clock)
+- [光照测试](apps/als-test)
 
 ## 使用说明
 
