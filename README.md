@@ -2,11 +2,9 @@
 
 开源粉丝面板
 
-购买链接：https://item.taobao.com/item.htm?id=636602441363
-
-Github托管：https://github.com/HelloWorksGroup/FansBoard
-
-Gitee托管：https://gitee.com/xianii/fans-board
+- 【购买链接】https://item.taobao.com/item.htm?id=636602441363
+- 【Github托管】https://github.com/HelloWorksGroup/FansBoard
+- 【Gitee托管】https://gitee.com/xianii/fans-board
 
 ## 总览
 
