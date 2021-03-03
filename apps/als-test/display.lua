@@ -189,6 +189,12 @@ local disp_prop = disp_prop or {
 	buffer = {},	-- bitmap buffer
 	index = {},		-- update index array
 }
+
+
+function display:set_duty(duty)
+	spi_send({0xA,duty,0xA,duty,0xA,duty,0xA,duty})
+end
+
 function display:show_num(num)
 	if num > 99999999 then
 		print("exceed max num")
