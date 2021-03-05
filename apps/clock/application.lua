@@ -18,7 +18,7 @@ local timeStr_flag = true
 -- 是否从网络获取时间
 local timeWifi = 0
 
-time_disp_tmr:register(2000, tmr.ALARM_AUTO, 
+time_disp_tmr:register(1000, tmr.ALARM_AUTO, 
 function(t)
 	local coma = " "
 	if timeStr_flag then
