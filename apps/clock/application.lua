@@ -87,7 +87,6 @@ api_tmr:start()
 time_disp_tmr:start()
 
 -- 自动亮度调节
-local adc_tmr = tmr.create()
 local adc_tab = {}
 local bright = 6
 local auto_up = {
@@ -100,12 +99,20 @@ function auto_bright(adc)
 	if adc>auto_up[bright+1] then
 		bright = bright+1
 		display:set_duty(bright)
+		if bright == 1 then
+			time_disp_tmr:interval(1000)
+		end
 	elseif bright>0 and adc<auto_down[bright] then
 		bright = bright-1
 		display:set_duty(bright)
+		if bright == 0 then
+			time_disp_tmr:interval(2000)
+		end
 	end
 end
+
 if adc then
+	local adc_tmr = tmr.create()
 	adc.force_init_mode(adc.INIT_ADC)
 	adc_tmr:register(250, tmr.ALARM_AUTO, 
 	function(t)
