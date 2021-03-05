@@ -40,6 +40,7 @@ function(t)
 	local h = tonumber(timeStr_Hour)
 	m = m+1
 	if m>=60 then
+		m = 0
 		h = h+1
 		if h>=24 then
 			h = 0
