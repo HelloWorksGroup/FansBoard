@@ -85,3 +85,40 @@ end)
 api_tmr:start()
 
 time_disp_tmr:start()
+
+-- 自动亮度调节
+local adc_tmr = tmr.create()
+local adc_tab = {}
+local bright = 6
+local auto_up = {
+	10,80,160,300,500,800,9999
+}
+local auto_down = {
+	5,40,120,200,360,600
+}
+function auto_bright(adc)
+	if adc>auto_up[bright+1] then
+		bright = bright+1
+		display:set_duty(bright)
+	elseif bright>0 and adc<auto_down[bright] then
+		bright = bright-1
+		display:set_duty(bright)
+	end
+end
+if adc then
+	adc.force_init_mode(adc.INIT_ADC)
+	adc_tmr:register(250, tmr.ALARM_AUTO, 
+	function(t)
+		table.insert(adc_tab, adc.read(0))
+		while(#adc_tab>8) do
+			table.remove(adc_tab, 1)
+		end
+		local adc = 0
+		for _,v in ipairs(adc_tab) do
+			adc = adc+v
+		end
+		adc = adc / #adc_tab
+		auto_bright(adc)
+	end)
+	adc_tmr:start()
+end
