@@ -25,25 +25,29 @@ function auto_bright(adc)
 	end
 end
 
-
-gpio.mode(1, gpio.INT)
-gpio.trig(1, "up", function()
-	auto = false
-	if bright<15 then
-		bright = bright + 1
-		display:set_duty(bright)
+-- 检测是否存在有效下拉，如存在则使能按键功能
+gpio.mode(1, gpio.INPUT, gpio.PULLUP)
+gpio.mode(2, gpio.INPUT, gpio.PULLUP)
+if gpio.read(1) == 0 and gpio.read(2) == 0 then
+	gpio.mode(1, gpio.INT)
+	gpio.trig(1, "up", function()
+		auto = false
+		if bright<15 then
+			bright = bright + 1
+			display:set_duty(bright)
+		end
 	end
-end
-)
-gpio.mode(2, gpio.INT)
-gpio.trig(2, "up", function()
-	auto = false
-	if bright>0 then
-		bright = bright - 1
-		display:set_duty(bright)
+	)
+	gpio.mode(2, gpio.INT)
+	gpio.trig(2, "up", function()
+		auto = false
+		if bright>0 then
+			bright = bright - 1
+			display:set_duty(bright)
+		end
 	end
+	)
 end
-)
 
 adc.force_init_mode(adc.INIT_ADC)
 display:update("READY", 1)
