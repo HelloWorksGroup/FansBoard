@@ -72,6 +72,7 @@ local asc_simple = asc_simple or {
 	X={0x1B,0x04,0x1B},
 	Y={0x18,0x07,0x18},
 	Z={0x13,0x15,0x19},
+	[":"]={0x00,0x0A,0x00},
 	["#"]={0x0A,0x00,0x0A},
 	["."]={0x00,0x02,0x00},
 	["-"]={0x04,0x04,0x04},
@@ -188,6 +189,12 @@ local disp_prop = disp_prop or {
 	buffer = {},	-- bitmap buffer
 	index = {},		-- update index array
 }
+
+
+function display:set_duty(duty)
+	spi_send({0xA,duty,0xA,duty,0xA,duty,0xA,duty})
+end
+
 function display:show_num(num)
 	if num > 99999999 then
 		print("exceed max num")
