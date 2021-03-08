@@ -40,9 +40,10 @@ wifi_got_ip_event = function(T)
 	print("Wifi connection is ready! IP address is: "..T.IP)
 	if not app_started then
 		display:update("GET IP", -1)
+		display:update("READY", 1)
 	-- Note: Having an IP address does not mean there is internet access!
 	-- Internet connectivity can be determined with net.dns.resolve().
-		tmr.create():alarm(1000, tmr.ALARM_SINGLE, startup)
+		tmr.create():alarm(2000, tmr.ALARM_SINGLE, startup)
 	end
 end
 

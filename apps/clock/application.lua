@@ -10,7 +10,6 @@ display = require("display")
 local api_tmr = tmr.create()
 local time_disp_tmr = tmr.create()
 
-display:update("READY", 1)
 local timeStr_Hour = "--"
 local timeStr_Min = "--"
 local timeStr_flag = true
