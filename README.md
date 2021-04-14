@@ -24,6 +24,7 @@
 - [粉丝面板](apps/fans-board)
 - [经典时钟](apps/clock)
 - [光照测试](apps/als-test)
+- [新作播放](apps/new-play-count)
 
 ## 使用说明
 
