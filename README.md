@@ -153,8 +153,6 @@
 ## 社区
 
 - QQ群-1群：`177238886`
-- 井盖群：[https://jgchat.net/i/FXVivStG](https://jgchat.net/i/FXVivStG)
-
 
 ## 赞助(Sponsor)
 
