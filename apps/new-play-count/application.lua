@@ -11,8 +11,9 @@ local api_tmr = tmr.create()
 
 display:update("READY", 1)
 fans = 0
-api_tmr:register(7000, tmr.ALARM_AUTO, 
+api_tmr:register(2000, tmr.ALARM_AUTO, 
 function(t)
+	api_tmr:interval(10000+math.random(1000,6000))
     print("update")
     http.get(api..uid, nil, 
     function(code, data)
