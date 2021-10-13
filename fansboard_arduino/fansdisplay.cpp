@@ -1,8 +1,6 @@
 
 #include "fansdisplay.h"
 // #include "fansfonts.h"
-
-#include <Arduino.h>
 #include <SPI.h>
 
 #define SPI_CS_PIN (2)
@@ -15,14 +13,133 @@ uint8_t display_init_array[5][8]= {
     {0xF,0x0,0xF,0x0,0xF,0x0,0xF,0x0}
 };
 
-uint8_t display_buffer[32] = {
+uint8_t display_buffer[32+3] = {
     0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
     0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80,
     0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01,
     0x81, 0x81, 0x42, 0x42, 0x24, 0x24, 0x18, 0x18,
 };
+uint8_t display_buffer_back[32+3];
+
+static const uint8_t asc_simple[][3]= {
+    {0x00,0x00,0x00},	// " "
+    {0x00,0x1D,0x00},	// "!"
+    {0x18,0x00,0x18},	// """
+    {0x0A,0x00,0x0A},	// "#"
+    {0x1D,0x1F,0x17},	// "$"
+    {0x03,0x1B,0x18},	// "%"
+    {0x0D,0x12,0x09},	// "&"
+    {0x00,0x18,0x00},	// "'"
+    {0x00,0x0E,0x11},	// "("
+    {0x11,0x0E,0x00},	// ")"
+    {0x05,0x0E,0x05},	// "*"
+    {0x04,0x0E,0x04},	// "+"
+    {0x01,0x02,0x00},	// ","
+    {0x04,0x04,0x04},	// "-"
+    {0x00,0x02,0x00},	// "."
+    {0x02,0x04,0x08},	// "/"
+    {0x1E,0x11,0x0F},	// "0"
+    {0x08,0x1F,0x00},	// "1"
+    {0x13,0x15,0x19},	// "2"
+    {0x15,0x15,0x1A},	// "3"
+    {0x1C,0x04,0x1F},	// "4"
+    {0x19,0x15,0x12},	// "5"
+    {0x0F,0x15,0x16},	// "6"
+    {0x10,0x17,0x18},	// "7"
+    {0x1E,0x15,0x0F},	// "8"
+    {0x1D,0x15,0x0F},	// "9"
+    {0x00,0x0A,0x00},	// ":"
+    {0x00,0x0B,0x00},	// ":"
+    {0x04,0x0A,0x11},	// "<"
+    {0x0A,0x0A,0x0A},	// "="
+    {0x11,0x0A,0x04},	// ">"
+    {0x10,0x15,0x18},	// "?"
+    {0x1F,0x1D,0x1D},	// "@"
+    {0x0F,0x14,0x0F},	// "A"
+    {0x1F,0x15,0x0A},	// "B"
+    {0x0E,0x11,0x11},	// "C"
+    {0x1F,0x11,0x0E},	// "D"
+    {0x1F,0x15,0x11},	// "E"
+    {0x1F,0x14,0x10},	// "F"
+    {0x0E,0x11,0x17},	// "G"
+    {0x1F,0x04,0x1F},	// "H"
+    {0x11,0x1F,0x11},	// "I"
+    {0x02,0x01,0x1E},	// "J"
+    {0x1F,0x04,0x1B},	// "K"
+    {0x1F,0x01,0x01},	// "L"
+    {0x1F,0x08,0x1F},	// "M"
+    {0x1F,0x10,0x0F},	// "N"
+    {0x0E,0x11,0x0E},	// "O"
+    {0x1F,0x14,0x08},	// "P"
+    {0x0E,0x11,0x0F},	// "Q"
+    {0x1F,0x14,0x0B},	// "R"
+    {0x09,0x15,0x12},	// "S"
+    {0x10,0x1F,0x10},	// "T"
+    {0x1F,0x01,0x1F},	// "U"
+    {0x1E,0x01,0x1E},	// "V"
+    {0x1F,0x02,0x1F},	// "W"
+    {0x1B,0x04,0x1B},	// "X"
+    {0x18,0x07,0x18},	// "Y"
+    {0x13,0x15,0x19}	// "Z"
+};
+
 
 uint8_t display_cache[8];
+
+void Display::set_asc_shift(uint8_t pos, char chr, int8_t shift)
+{
+    // Upper case
+    if(chr>=97 && chr<=122) {
+        chr -= 32;
+    }
+    if((chr>'Z') || (chr<' ')) {
+        return;
+    }
+    for (uint8_t i = 0; i < 3; i++)
+    {
+        display_buffer[pos+i] |= shift>0 ?
+                                 (asc_simple[chr-' '][i]<<shift) :
+                                 (shift<0 ?
+                                  (asc_simple[chr-' '][i]>>(-shift)) : (asc_simple[chr-' '][i]));
+    }
+}
+void Display::bitr(int8_t n)
+{
+    if(n>0) {
+        for (uint8_t i = 0; i < 32; i++) {
+            display_buffer[i]<<=n;
+        }
+    } else if(n<0) {
+        for (uint8_t i = 0; i < 32; i++) {
+            display_buffer[i]>>=-n;
+        }
+    }
+}
+// TODO: 滚动显示以支持长字符串
+void Display::wr_str_to_buffer(String str, uint8_t* buffer)
+{
+    uint8_t len = str.length()>8?8:str.length();
+    uint8_t width_left = 32 - len*4;
+    uint8_t str_pos = width_left>>1;
+    for (uint8_t s = 0; s < len; s++)
+    {
+        for (uint8_t i = 0; i < 3; i++) {
+            buffer[str_pos+i] = asc_simple[str[s]-' '][i];
+        }
+        str_pos += 4;
+    }
+}
+
+void Display::show_str(String str)
+{
+    this->clear();
+    this->wr_str_to_buffer(str, display_buffer);
+    this->update();
+}
+void Display::show_num(uint32_t num)
+{
+    this->show_str(String(num));
+}
 
 void Display::spi_send(uint8_t* buffer, uint16_t size)
 {
@@ -49,7 +166,7 @@ void Display::test() {
     {
         display_buffer[i] = var;
         this->update();
-        delay(100);
+        delay(50);
         if(delta) {
             var >>= 1;
         } else {
@@ -65,7 +182,11 @@ void Display::test() {
         }
     }
 }
-
+void Display::clear() {
+    for (uint8_t i = 0; i < 32; i++) {
+        display_buffer[i] = 0;
+    }
+}
 void Display::update() {
     for (uint8_t i = 0; i < 8; i++) {
         for (uint8_t j = 0; j < 4; j++) {
